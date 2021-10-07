@@ -7,6 +7,9 @@ class Player(models.Model):
     description= models.CharField(max_length=150)
     phone= models.CharField(max_length=10)
 
+    def phone(self):
+        return self.phone
+
     def __str__(self):
         return self.name
 
