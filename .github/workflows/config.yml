@@ -4,14 +4,18 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   deploy:
     name: deploy to cluster
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: build and push to docker
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Build and push to Docker Hub
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -20,3 +24,7 @@ jobs:
           tag_with_ref: true
           tag_width_sha: true
           tags: ${{ github.sha }}
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
